@@ -231,6 +231,9 @@ class DDInterface:
     with open('loaded_files.txt', 'w') as f:
       f.writelines(lines)
 
+  def SetWorkerID(self):
+    os.environ['MYWORKERID'] = self.dd_client.new_worker_id()
+
   def AttachProject(self, proj_id):
     self.proj_id = proj_id
     #proj = self.dd_client.get_project(proj_id, with_files=False)
@@ -270,6 +273,7 @@ class DDInterface:
     else:
       cluster = '0'
       process = '0'
+    ## TODO -- make options for capturing output
     proc = subprocess.run('lar -c %s -s %s -n %i --nskip %i -o "dc4_hd_protodune_%%tc_%s_%s_reco.root"'%(fcl, self.lar_file_list, n, nskip, cluster, process), shell=True)
     if proc.returncode != 0:
       self.MarkFiles(True)
